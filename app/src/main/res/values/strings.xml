@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Feed Board</string>
+    <string name="title_activity_add_feed">Add Feed</string>
+    <string name="Save_Feed">Save Feed</string>
+    <string name="title_activity_edit_rss_feed">Edit Rss Feed</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="text_title">This is a title</string>
+    <string name="text_rss_title">This is a Rss Feed title</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_rss_feed_title_hint">Enter title</string>
+    <string name="add_rss_feed_address_hint">Enter address</string>
+    <string name="title_activity_rss_item_view">RssItemViewActivity</string>
+    <string name="webview_banner_ad_id">ca-app-pub-8144955127644280/6202457259</string>
+</resources>
