@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     int feedCount;
     int retrievedFeedCount;
     CoordinatorLayout cr;
+    SwipeRefreshLayout swipeContainer;
 
 
     @Override
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
         //check internet connection
         if(!CheckNetwork.isInternetAvailable(MainActivity.this)) //returns true if internet available
@@ -73,11 +76,6 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         }
 
-
-
-
-
-
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,9 +90,37 @@ public class MainActivity extends AppCompatActivity {
         feedCount = rssFeeds.size();
         retrievedFeedCount = 0;
 
+        CreateFeeds();
+
+//        for (int i = 0; i < rssFeeds.size(); i++) {
+//            GetFeedItems(rssFeeds.get(i).rssFeedAddress);
+//        }
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+
+                CreateFeeds();
+                swipeContainer.setRefreshing(false);
+
+            }
+        });
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary,
+                R.color.colorAccent,
+                R.color.colorPrimaryDark);
+    }
+
+    public void CreateFeeds(){
 
         for (int i = 0; i < rssFeeds.size(); i++) {
             GetFeedItems(rssFeeds.get(i).rssFeedAddress);
+            Log.d("REFRESHED", "feed refreshed");
         }
     }
 
