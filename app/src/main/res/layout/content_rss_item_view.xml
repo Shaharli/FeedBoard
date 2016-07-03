@@ -14,8 +14,4 @@
         android:id="@+id/rssFeedItemWebView"
         android:layout_alignParentTop="true" />
 
-    <com.google.android.gms.ads.AdView
-        >
-
-    </com.google.android.gms.ads.AdView>
 </RelativeLayout>

@@ -1,8 +1,11 @@
 package com.avigezerit.feedboard;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     List<RssFeed> rssFeeds;
     int feedCount;
     int retrievedFeedCount;
+    CoordinatorLayout cr;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,45 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //check internet connection
+        if(!CheckNetwork.isInternetAvailable(MainActivity.this)) //returns true if internet available
+        {
+
+            //show user dialog, try again
+
+            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+            dialog.setTitle("Network Connection Problem");
+            dialog.setMessage("Check your internet connection");
+
+            dialog.setNegativeButton("Close", new AlertDialog.OnClickListener(){
+
+                public void onClick(DialogInterface dialog, int which) {
+                    moveTaskToBack(true);
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(1);
+
+                }
+            });
+            dialog.setPositiveButton("Try again", new AlertDialog.OnClickListener(){
+
+                public void onClick(DialogInterface dialog, int i) {
+                    Log.d("TRY CONNECTING AGAIN", "try again");
+
+                    Intent refresh = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(refresh);
+                    finish();
+
+                }
+            });
+
+            dialog.show();
+        }
+
+
+
+
+
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -48,25 +92,12 @@ public class MainActivity extends AppCompatActivity {
         feedCount = rssFeeds.size();
         retrievedFeedCount = 0;
 
-        //check internt connection
-
-//            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-//            dialog.setTitle("No connection");
-//            dialog.setMessage("Please check your internet connection");
-//
-//            dialog.setNegativeButton("Close", null);
-//            dialog.setPositiveButton("Try again", new AlertDialog.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int which) {
-//                    Log.d("CONNECTION: ", "Clicked on try again");
-//                }
-//        });
-
-        //show user dialog, try again
 
         for (int i = 0; i < rssFeeds.size(); i++) {
             GetFeedItems(rssFeeds.get(i).rssFeedAddress);
         }
     }
+
 
     public void GetFeedItems(String feedAddress){
 
